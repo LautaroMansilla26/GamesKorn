@@ -47,9 +47,10 @@
                 <input type="text"
                        class="form-control bg-dark text-white border-secondary shadow-none form-control-sm"
                        placeholder="Buscar producto (Presioná Enter)..."
-                       @bind-value="filtroService.TerminoBusqueda"
-                       @bind-value:event="oninput"
-                       @onkeyup="OnBusquedaKeyUp" />
+                       @value="filtroService.TerminoBusqueda"
+                       @oninput="OnInputChanged"
+                       @onkeydown="OnBusquedaKeyDown" />
+
                 @if (!string.IsNullOrWhiteSpace(filtroService.TerminoBusqueda))
                 {
                     <button class="btn btn-dark border-secondary text-secondary" type="button" @onclick="LimpiarBusquedaLayout" title="Limpiar búsqueda">
@@ -81,30 +82,25 @@
 @code {
     private bool collapseSidebar = true;
 
-    private void ToggleSidebar()
-    {
-        collapseSidebar = !collapseSidebar;
-    }
-
-    private void CerrarSidebar()
-    {
-        collapseSidebar = true;
-    }
+    private void ToggleSidebar() => collapseSidebar = !collapseSidebar;
+    private void CerrarSidebar() => collapseSidebar = true;
 
     private void CerrarSidebarSiEstaAbierto()
     {
-        if (!collapseSidebar)
-        {
-            collapseSidebar = true;
-        }
+        if (!collapseSidebar) collapseSidebar = true;
     }
 
-    private void OnBusquedaKeyUp(KeyboardEventArgs e)
+    private void OnInputChanged(ChangeEventArgs e)
+    {
+        // Actualizamos el término en tiempo real mientras escribe
+        filtroService.ActualizarTermino(e.Value?.ToString() ?? string.Empty);
+    }
+
+    private void OnBusquedaKeyDown(KeyboardEventArgs e)
     {
         if (e.Key == "Enter")
         {
-            filtroService.ActualizarTermino(filtroService.TerminoBusqueda);
-
+            // Forzamos la navegación al inicio si estamos en otra página para ver los resultados
             if (!Navigation.Uri.EndsWith("/"))
             {
                 Navigation.NavigateTo("/");
