@@ -1,4 +1,4 @@
-#  GamesKorn
+﻿#  GamesKorn
 
 Plataforma web de tienda y catálogo digital de videojuegos desarrollada con **.NET 8** y **Blazor**, 
 conectada a una base de datos relacional en la nube y desplegada mediante integración y entrega continua (CI/CD).
@@ -69,4 +69,4 @@ Para conocer en detalle el funcionamiento interno del sistema, consultá los sig
 
 📐 Arquitectura y Despliegue (CI/CD)
 
-🗄️ Modelo de Base de Datos y Migraciones﻿
+🗄️ Modelo de Base de Datos y Migraciones

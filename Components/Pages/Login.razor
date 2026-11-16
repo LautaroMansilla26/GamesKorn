@@ -1,4 +1,99 @@
 ﻿@page "/login"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@inject NavigationManager Navigation
+@using GamesKorn.Components.Models
 
-<h2 class="fw-bold mb-3">Iniciar Sesión</h2>
-<p class="text-muted">Ingresa tus credenciales para acceder a GamesKorn.</p>
+<PageTitle>GamesKorn - Iniciar Sesión</PageTitle>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card bg-dark border border-secondary text-white p-4 shadow-lg rounded-4" style="background-color: #1A1D24 !important;">
+
+                <!-- Encabezado -->
+                <div class="text-center mb-4">
+                    <i class="bi bi-controller display-4" style="color: #00FF66;"></i>
+                    <h2 class="fw-bold mt-2">Iniciar Sesión</h2>
+                    <p class="text-muted small">Ingresa tus credenciales para acceder a GamesKorn.</p>
+                </div>
+
+                <!-- Formulario -->
+                <EditForm Model="loginModel" OnValidSubmit="HandleLogin">
+
+                    <div class="mb-3">
+                        <label class="form-label text-light">Correo electrónico</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-black border-secondary text-muted"><i class="bi bi-envelope"></i></span>
+                            <InputText @bind-Value="loginModel.Email" class="form-control bg-black text-white border-secondary" placeholder="usuario@gameskorn.com" />
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label text-light">Contraseña</label>
+                        <div class="input-group">
+                            <span class="input-group-text bg-black border-secondary text-muted"><i class="bi bi-lock"></i></span>
+                            <InputText type="password" @bind-Value="loginModel.Password" class="form-control bg-black text-white border-secondary" placeholder="••••••••" />
+                        </div>
+                    </div>
+
+                    <!-- Mensaje de error personalizado utilizando ValidadorGamer -->
+                    @if (!string.IsNullOrEmpty(mensajeError))
+                    {
+                        <div class="alert alert-danger bg-dark border-danger text-danger text-center py-2 small mb-3">
+                            <i class="bi bi-exclamation-triangle-fill me-1"></i> @mensajeError
+                        </div>
+                    }
+
+                    <button type="submit" class="btn btn-success w-100 fw-bold py-2 shadow-sm">
+                        <i class="bi bi-box-arrow-in-right me-2"></i> Entrar
+                    </button>
+                </EditForm>
+
+                <!-- Pie de tarjeta -->
+                <div class="text-center mt-4 border-top border-secondary pt-3">
+                    <p class="text-muted small mb-0">
+                        ¿No tenés una cuenta? <a href="/register" class="text-success text-decoration-none fw-bold">Registrate aquí</a>
+                    </p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private LoginModel loginModel = new();
+    private string? mensajeError;
+
+    private class LoginModel
+    {
+        public string Email { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+    }
+
+    private void HandleLogin()
+    {
+        // Reutilizamos las reglas de validación de la clase estática ValidadorGamer
+        if (!ValidadorGamer.EsEmailValido(loginModel.Email))
+        {
+            mensajeError = "El correo electrónico ingresado no es válido.";
+            return;
+        }
+
+        if (!ValidadorGamer.EsContrasenaValida(loginModel.Password))
+        {
+            mensajeError = "La contraseña debe tener al menos 6 caracteres.";
+            return;
+        }
+
+        // Validación de credenciales de ejemplo para el sistema
+        if (loginModel.Email == "admin@gameskorn.com" && loginModel.Password == "123456")
+        {
+            Navigation.NavigateTo("/");
+        }
+        else
+        {
+            mensajeError = "Credenciales incorrectas. (Prueba con admin@gameskorn.com / 123456)";
+        }
+    }
+}

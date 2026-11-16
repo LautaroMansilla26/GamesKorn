@@ -3,8 +3,10 @@
 @inject CarritoState CarritoState 
 @using GamesKorn.Components.Models
 @using GamesKorn.Components.Services
-@using GamesKorn.Services <!-- Asegúrate de incluir el namespace del carrito -->
+@using GamesKorn.Services 
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@* COMPONENTE REUTILIZABLE *@
 
 <div class="card h-100 text-white border-secondary card-producto-hover shadow-sm"
      style="background-color: #1A1D24; border-color: #2D3748 !important; cursor: pointer;"
