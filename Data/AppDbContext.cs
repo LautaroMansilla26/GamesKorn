@@ -9,7 +9,7 @@ namespace GamesKorn.Data
 
         public DbSet<ProductoModelo> Productos { get; set; }
         public DbSet<CategoriaModelo> Categorias { get; set; }
-        public DbSet<SubCategoriaModelo> SubCategorias { get; set; }
+        public DbSet<SubCategoriaModelo> SubCategorias { get; set; }    
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
