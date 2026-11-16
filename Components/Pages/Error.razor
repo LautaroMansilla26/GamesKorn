@@ -1,30 +1,54 @@
 ﻿@page "/Error"
 @using System.Diagnostics
 
-<PageTitle>Error</PageTitle>
+<PageTitle>GamesKorn - Error del Sistema</PageTitle>
+@* 
+COMPONENTE REUTILIZABLE *@
 
-<h1 class="text-danger">Error.</h1>
-<h2 class="text-danger">An error occurred while processing your request.</h2>
+<div class="container py-5 text-white">
+    <div class="row justify-content-center">
+        <div class="col-md-8 bg-dark border border-danger rounded p-5 shadow-lg" style="background-color: #1A1D24 !important;">
 
-@if (ShowRequestId)
-{
-    <p>
-        <strong>Request ID:</strong> <code>@RequestId</code>
-    </p>
-}
+            <!-- Encabezado de Alerta -->
+            <div class="text-center mb-4">
+                <i class="bi bi-exclamation-triangle-fill text-danger display-1"></i>
+                <h1 class="text-danger fw-bold mt-3">¡Ocurrió un error!</h1>
+                <h4 class="text-light">Se ha producido un inconveniente al procesar tu solicitud en GamesKorn.</h4>
+            </div>
 
-<h3>Development Mode</h3>
-<p>
-    Swapping to <strong>Development</strong> environment will display more detailed information about the error that occurred.
-</p>
-<p>
-    <strong>The Development environment shouldn't be enabled for deployed applications.</strong>
-    It can result in displaying sensitive information from exceptions to end users.
-    For local debugging, enable the <strong>Development</strong> environment by setting the <strong>ASPNETCORE_ENVIRONMENT</strong> environment variable to <strong>Development</strong>
-    and restarting the app.
-</p>
+            <!-- Identificador de la solicitud -->
+            @if (ShowRequestId)
+            {
+                <div class="alert alert-secondary bg-black border-secondary text-light text-center" role="alert">
+                    <strong>ID de Solicitud:</strong> <code class="text-success">@RequestId</code>
+                </div>
+            }
 
-@code{
+            <hr class="border-secondary my-4">
+
+            <!-- Información sobre el entorno -->
+            <h5 class="text-white fw-bold"><i class="bi bi-info-circle me-2 text-info"></i>Modo de Desarrollo</h5>
+            <p class="text-muted small">
+                Cambiar al entorno de <strong>Desarrollo</strong> permite visualizar información más detallada sobre las excepciones ocurridas durante la ejecución.
+            </p>
+            <p class="text-muted small mb-0">
+                <strong class="text-warning">El entorno de desarrollo no debe estar habilitado en aplicaciones desplegadas en producción.</strong>
+                Esto puede exponer información sensible de los errores a los usuarios finales. Para depurar localmente, configurá la variable de entorno
+                <code>ASPNETCORE_ENVIRONMENT</code> como <code>Development</code> y reiniciá la aplicación.
+            </p>
+
+            <!-- Botón de Retorno -->
+            <div class="text-center mt-4">
+                <a href="/" class="btn btn-success fw-bold px-4 py-2">
+                    <i class="bi bi-house-door-fill me-2"></i> Volver al Inicio
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@code {
     [CascadingParameter]
     private HttpContext? HttpContext { get; set; }
 

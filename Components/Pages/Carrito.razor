@@ -1,6 +1,7 @@
 ﻿@page "/carrito"
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 @inject CarritoState CarritoState
+@using GamesKorn.Components
 @using GamesKorn.Components.Models
 @implements IDisposable
 
@@ -9,7 +10,12 @@
 <div class="py-3 text-white">
     <h2 class="fw-bold mb-4" style="color: #00FF66;">Tu Carrito Gamer</h2>
 
-    @if (!CarritoState.Items.Any())
+    @if (compraRealizada)
+    {
+        <!-- Invocación de nuestro componente reutilizable con parámetros -->
+        <NotificacionCompra CantidadItems="cantidadComprada" />
+    }
+    else if (!CarritoState.Items.Any())
     {
         <div class="alert alert-dark border-secondary text-center py-5">
             <i class="bi bi-cart-x fs-1 text-muted d-block mb-2"></i>
@@ -72,6 +78,9 @@
 </div>
 
 @code {
+    private bool compraRealizada = false;
+    private int cantidadComprada = 0;
+
     protected override void OnInitialized()
     {
         CarritoState.OnChange += StateHasChanged;
@@ -84,7 +93,12 @@
 
     private void FinalizarCompra()
     {
-        CarritoState.VaciarCarrito();
+        if (CarritoState.Items.Any())
+        {
+            cantidadComprada = CarritoState.Items.Count;
+            compraRealizada = true;
+            CarritoState.VaciarCarrito();
+        }
     }
 
     public void Dispose()

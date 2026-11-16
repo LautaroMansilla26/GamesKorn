@@ -1,0 +1,32 @@
+﻿<div class="alert bg-dark border border-success text-white p-5 rounded shadow-lg text-center my-4" style="background-color: #1A1D24 !important;">
+    <i class="@Icono display-1 mb-3" style="color: #00FF66;"></i>
+    <h3 class="fw-bold" style="color: #00FF66;">@Titulo</h3>
+    <p class="text-light fs-5 mt-2">
+        Has adquirido <strong style="color: #00FF66;">@CantidadItems</strong> elementos en tu pedido. ¡Gracias por confiar en GamesKorn!
+    </p>
+    <div class="mt-4">
+        <a href="@UrlBoton" class="btn btn-success fw-bold px-4 py-2">
+            <i class="@IconoBoton me-2"></i> @TextoBoton
+        </a>
+    </div>
+</div>
+@* COMPONENTE REUTILIZABLE *@
+@code {
+    [Parameter]
+    public string Titulo { get; set; } = "¡Compra Finalizada con Éxito!";
+
+    [Parameter]
+    public int CantidadItems { get; set; } = 0;
+
+    [Parameter]
+    public string Icono { get; set; } = "bi bi-check-circle-fill";
+
+    [Parameter]
+    public string UrlBoton { get; set; } = "/";
+
+    [Parameter]
+    public string TextoBoton { get; set; } = "Volver al Catálogo";
+
+    [Parameter]
+    public string IconoBoton { get; set; } = "bi bi-controller";
+}
