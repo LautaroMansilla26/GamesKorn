@@ -1,0 +1,141 @@
+.page {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    background-color: #0D0F12;
+    min-height: 100vh;
+}
+
+main {
+    flex: 1;
+    background-color: #0D0F12;
+    min-width: 0;
+}
+
+.sidebar {
+    background-color: #1A1D24;
+    border-right: 1px solid #2D3748;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    z-index: 1040; /* <-- CLAVE: Por encima del backdrop para poder clickear las opciones */
+}
+
+.top-row {
+    background-color: #12151B;
+    border-bottom: 1px solid #2D3748;
+    height: 3.5rem;
+    display: flex;
+    align-items: center;
+}
+
+@media (min-width: 641px) {
+    .page {
+        flex-direction: row;
+    }
+
+    .sidebar {
+        width: 250px;
+        height: 100vh;
+        position: sticky;
+        top: 0;
+    }
+
+    /* CUANDO ESTÁ COLAPSADO: Oculta por completo la barra lateral liberando espacio */
+    .page.sidebar-collapsed .sidebar {
+        width: 0px;
+        min-width: 0px;
+        border-right: none;
+        padding: 0;
+    }
+
+    .top-row {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+    }
+}
+
+@media (max-width: 640.98px) {
+    .sidebar {
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1050; /* Mayor en móvil para garantizar prioridad */
+        width: 260px;
+        height: 100vh;
+        transform: translateX(0);
+        transition: transform 0.3s ease;
+    }
+
+    /* EN MÓVIL: Se desliza fuera de la pantalla por completo */
+    .page.sidebar-collapsed .sidebar {
+        transform: translateX(-100%);
+    }
+}
+
+#blazor-error-ui {
+    background: #1A1D24;
+    color: #FF5555;
+    border-top: 2px solid #FF5555;
+    bottom: 0;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+    display: none;
+    left: 0;
+    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+    position: fixed;
+    width: 100%;
+    z-index: 1000;
+}
+
+    #blazor-error-ui .reload {
+        color: #00FF66;
+        margin-left: 1rem;
+    }
+
+    #blazor-error-ui .dismiss {
+        cursor: pointer;
+        position: absolute;
+        right: 0.75rem;
+        top: 0.5rem;
+        color: #A0AEC0;
+    }
+
+/* Botón Volver Arriba Flotante */
+#btnVolverArriba {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    width: 45px;
+    height: 45px;
+    background-color: #1A1D24 !important;
+    border: 1px solid #00FF66 !important;
+    color: #00FF66 !important;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease-in-out;
+    z-index: 1080;
+}
+
+    #btnVolverArriba.mostrar {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    #btnVolverArriba:hover {
+        background-color: #00FF66 !important;
+        color: #000 !important;
+        transform: translateY(-3px);
+        box-shadow: 0 0 15px rgba(0, 255, 102, 0.4) !important;
+    }
+
+/* Capa de fondo oscura (Backdrop) */
+.sidebar-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1030; /* <-- Menor que el .sidebar (1040) para que no bloquee los clics del menú */
+}

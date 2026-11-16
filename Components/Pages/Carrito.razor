@@ -1,0 +1,94 @@
+﻿@page "/carrito"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@inject CarritoState CarritoState
+@using GamesKorn.Components.Models
+@implements IDisposable
+
+<PageTitle>GamesKorn - Carrito de Compras</PageTitle>
+
+<div class="py-3 text-white">
+    <h2 class="fw-bold mb-4" style="color: #00FF66;">Tu Carrito Gamer</h2>
+
+    @if (!CarritoState.Items.Any())
+    {
+        <div class="alert alert-dark border-secondary text-center py-5">
+            <i class="bi bi-cart-x fs-1 text-muted d-block mb-2"></i>
+            <p class="text-muted">Tu carrito está vacío.</p>
+            <a href="/" class="btn btn-primary mt-2">Ir al Catálogo</a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            <!-- Listado de productos -->
+            <div class="col-lg-8">
+                <div class="d-flex flex-column gap-3">
+                    @foreach (var item in CarritoState.Items)
+                    {
+                        <div class="card bg-dark border-secondary text-white p-3 d-flex flex-row align-items-center justify-content-between" style="border-color: #2D3748 !important;">
+                            <div class="d-flex align-items-center gap-3">
+                                <img src="@item.ImagenUrl" alt="@item.Nombre" style="width: 80px; height: 60px; object-fit: cover; border-radius: 4px;" />
+                                <div>
+                                    <h5 class="mb-1 fw-bold">@item.Nombre</h5>
+                                    <span class="badge" style="background-color: rgba(0, 255, 102, 0.15); color: #00FF66; border: 1px solid #00FF66;">
+                                        @item.EtiquetaTexto
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center gap-4">
+                                <span class="fw-bold fs-5" style="color: #00FF66;">$@item.Precio.ToString("N0")</span>
+                                <button class="btn btn-outline-danger btn-sm" @onclick="() => Remover(item)" title="Eliminar producto">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <!-- Resumen de pago -->
+            <div class="col-lg-4">
+                <div class="card bg-dark border-secondary text-white p-4" style="border-color: #2D3748 !important; background-color: #1A1D24 !important;">
+                    <h4 class="fw-bold mb-3">Resumen de Compra</h4>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Subtotal:</span>
+                        <span>$@CarritoState.ObtenerTotal().ToString("N0")</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3 border-bottom border-secondary pb-3">
+                        <span class="text-muted">Envío:</span>
+                        <span style="color: #00FF66;">Gratis</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-4 fs-4 fw-bold">
+                        <span>Total:</span>
+                        <span style="color: #00FF66;">$@CarritoState.ObtenerTotal().ToString("N0")</span>
+                    </div>
+                    <button class="btn btn-primary w-100 fw-bold py-2" @onclick="FinalizarCompra">
+                        Finalizar Compra
+                    </button>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        CarritoState.OnChange += StateHasChanged;
+    }
+
+    private void Remover(ProductoModelo producto)
+    {
+        CarritoState.RemoverProducto(producto);
+    }
+
+    private void FinalizarCompra()
+    {
+        CarritoState.VaciarCarrito();
+    }
+
+    public void Dispose()
+    {
+        CarritoState.OnChange -= StateHasChanged;
+    }
+}

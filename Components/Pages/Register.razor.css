@@ -1,0 +1,41 @@
+﻿.Formulario_Ingreso {
+    max-width: 450px;
+    margin: 20px auto;
+    padding: 25px;
+    background-color: #1A1D24;
+    border: 1px solid #2D3748;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    font-family: sans-serif;
+    color: #FFFFFF;
+}
+
+.grupo-campo {
+    margin-bottom: 15px;
+}
+
+    .grupo-campo label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #A0AEC0;
+        font-size: 14px;
+    }
+
+.input-form {
+    width: 100%;
+    padding: 10px;
+    font-size: 15px;
+    background-color: #0D0F12;
+    color: #FFFFFF;
+    border: 1px solid #2D3748;
+    border-radius: 4px;
+    box-sizing: border-box;
+    transition: all 0.3s ease;
+    outline: none;
+}
+
+    .input-form:focus {
+        border-color: #00FF66;
+        box-shadow: 0 0 8px rgba(0, 255, 102, 0.4);
+    }

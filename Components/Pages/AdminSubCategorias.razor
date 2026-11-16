@@ -1,0 +1,92 @@
+﻿@page "/admin/subcategorias"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@inject AppDbContext Context
+@inject ToastService ToastService
+@using GamesKorn.Components.Models
+@using GamesKorn.Data
+@using Microsoft.EntityFrameworkCore
+
+<h3 class="fw-bold text-white mb-4">Gestión de Subcategorías</h3>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card bg-dark border-secondary p-4">
+            <h5 class="text-white mb-3">Nueva Subcategoría</h5>
+            <EditForm Model="nuevaSub" OnValidSubmit="GuardarSub">
+                <DataAnnotationsValidator />
+                <div class="mb-3">
+                    <label class="form-label text-white">Categoría Principal</label>
+                    <InputSelect class="form-select bg-dark text-white border-secondary" @bind-Value="nuevaSub.CategoriaId">
+                        <option value="0">-- Seleccione --</option>
+                        @foreach (var cat in listaCategorias)
+                        {
+                            <option value="@cat.Id">@cat.Nombre</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label text-white">Nombre de Subcategoría</label>
+                    <InputText class="form-control bg-dark text-white border-secondary" @bind-Value="nuevaSub.Nombre" />
+                </div>
+                <button type="submit" class="btn btn-success w-100 fw-bold">Guardar Subcategoría</button>
+            </EditForm>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="table-responsive">
+            <table class="table table-dark table-striped align-middle border-secondary">
+                <thead>
+                    <tr>
+                        <th>Categoría</th>
+                        <th>Subcategoría</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var sub in listaSubCategorias)
+                    {
+                        <tr>
+                            <td><span class="badge bg-secondary">@(sub.Categoria?.Nombre ?? "S/C")</span></td>
+                            <td>@sub.Nombre</td>
+                            <td>
+                                @* <button class="btn btn-sm btn-outline-danger" @onclick="() => EliminarSub(sub)">Eliminar</button> *@
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@code {
+    private SubCategoriaModelo nuevaSub = new();
+    private List<SubCategoriaModelo> listaSubCategorias = new();
+    private List<CategoriaModelo> listaCategorias = new();
+
+    protected override async Task OnInitializedAsync() => await CargarDatos();
+
+    private async Task CargarDatos()
+    {
+        listaSubCategorias = await Context.SubCategorias.Include(s => s.Categoria).ToListAsync();
+        listaCategorias = await Context.Categorias.ToListAsync();
+    }
+
+    private async Task GuardarSub()
+    {
+        Context.SubCategorias.Add(nuevaSub);
+        await Context.SaveChangesAsync();
+        ToastService.Mostrar("Subcategoría creada con éxito");
+        nuevaSub = new();
+        await CargarDatos();
+    }
+
+    private async Task EliminarSub(SubCategoriaModelo sub)
+    {
+        Context.SubCategorias.Remove(sub);
+        await Context.SaveChangesAsync();
+        ToastService.Mostrar("Subcategoría eliminada");
+        await CargarDatos();
+    }
+}

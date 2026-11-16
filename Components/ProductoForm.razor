@@ -1,0 +1,122 @@
+﻿@using GamesKorn.Components.Models
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+
+@* COMPONENTE REUTILIZABLE, sirve para CREAR y *@
+
+
+<EditForm Model="Producto" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label class="form-label text-white">Nombre del Producto</label>
+        <InputText class="form-control bg-dark text-white border-secondary" @bind-Value="Producto.Nombre" />
+    </div>
+
+    <!-- 1. SELECTOR DE CATEGORÍA PRINCIPAL -->
+    <div class="mb-3">
+        <label class="form-label text-white">Categoría Principal</label>
+        <InputSelect class="form-select bg-dark text-white border-secondary" @bind-Value="categoriaSeleccionadaId" @bind-Value:after="OnCategoriaChanged">
+            <option value="0">-- Seleccione una categoría --</option>
+            @if (Categorias != null)
+            {
+                @foreach (var cat in Categorias)
+                {
+                    <option value="@cat.Id">@cat.Nombre</option>
+                }
+            }
+        </InputSelect>
+    </div>
+
+    <!-- 2. SELECTOR DE SUBCATEGORÍA (Dependiente) -->
+    <div class="mb-3">
+        <label class="form-label text-white">Subcategoría</label>
+        <InputSelect class="form-select bg-dark text-white border-secondary" @bind-Value="Producto.SubCategoriaId">
+            <option value="0">-- Seleccione una subcategoría --</option>
+            @if (subCategoriasFiltradas != null)
+            {
+                @foreach (var sub in subCategoriasFiltradas)
+                {
+                    <option value="@sub.Id">@sub.Nombre</option>
+                }
+            }
+        </InputSelect>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label text-white">Detalles Técnicos (Especificaciones)</label>
+        <InputTextArea class="form-control bg-dark text-white border-secondary" rows="3" @bind-Value="Producto.DetallesTecnicos" placeholder="Ej: 32 GB RAM DDR5, i9..." />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label text-white">Descripción general</label>
+        <InputText class="form-control bg-dark text-white border-secondary" @bind-Value="Producto.Descripcion" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label text-white">Precio ($)</label>
+        <InputNumber class="form-control bg-dark text-white border-secondary" @bind-Value="Producto.Precio" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label text-white">URL de la Imagen</label>
+        <InputText class="form-control bg-dark text-white border-secondary" @bind-Value="Producto.ImagenUrl" />
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label text-white">Etiqueta (Ej. Oferta)</label>
+        <InputText class="form-control bg-dark text-white border-secondary" @bind-Value="Producto.EtiquetaTexto" />
+    </div>
+
+    <button type="submit" class="btn btn-success fw-bold px-4">Guardar Producto</button>
+</EditForm>
+
+@code {
+    [Parameter, EditorRequired]
+    public ProductoModelo Producto { get; set; } = new();
+
+    [Parameter, EditorRequired]
+    public List<CategoriaModelo> Categorias { get; set; } = new();
+
+    [Parameter, EditorRequired]
+    public List<SubCategoriaModelo> SubCategoriasDisponibles { get; set; } = new();
+
+    [Parameter]
+    public EventCallback OnGuardar { get; set; }
+
+    private int categoriaSeleccionadaId;
+    private List<SubCategoriaModelo> subCategoriasFiltradas = new();
+
+    protected override void OnParametersSet()
+    {
+        // Si estamos editando un producto existente, detectamos su categoría actual para precargar el combo
+        if (Producto.SubCategoriaId > 0 && SubCategoriasDisponibles != null)
+        {
+            var subActual = SubCategoriasDisponibles.FirstOrDefault(s => s.Id == Producto.SubCategoriaId);
+            if (subActual != null)
+            {
+                categoriaSeleccionadaId = subActual.CategoriaId;
+                subCategoriasFiltradas = SubCategoriasDisponibles.Where(s => s.CategoriaId == categoriaSeleccionadaId).ToList();
+            }
+        }
+    }
+
+    private void OnCategoriaChanged()
+    {
+        // Filtramos las subcategorías según la categoría elegida
+        subCategoriasFiltradas = SubCategoriasDisponibles
+            .Where(s => s.CategoriaId == categoriaSeleccionadaId)
+            .ToList();
+
+        // Reseteamos la subcategoría seleccionada del producto al cambiar de categoría principal
+        Producto.SubCategoriaId = 0;
+    }
+
+    private async Task Guardar()
+    {
+        if (OnGuardar.HasDelegate)
+        {
+            await OnGuardar.InvokeAsync();
+        }
+    }
+}

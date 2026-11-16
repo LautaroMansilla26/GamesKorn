@@ -1,0 +1,54 @@
+﻿@inject ToastService ToastService
+@implements IDisposable
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@* 
+COMPONENTE REUTILIZABLE *@
+@if (isVisible)
+{
+    <div class="toast-flotante @(esOcultando ? "fade-out" : "")">
+        <i class="bi bi-check-circle-fill me-2" style="color: #00FF66; font-size: 1.2rem;"></i>
+        <span>@mensaje</span>
+    </div>
+}
+
+@code {
+    private bool isVisible = false;
+    private bool esOcultando = false;
+    private string mensaje = string.Empty;
+    private System.Threading.Timer? timer;
+
+    protected override void OnInitialized()
+    {
+        ToastService.OnShow += MostrarMensaje;
+    }
+
+    private void MostrarMensaje(string msg)
+    {
+        mensaje = msg;
+        isVisible = true;
+        esOcultando = false;
+        InvokeAsync(StateHasChanged);
+
+        timer?.Dispose();
+
+        // A los 2.7 segundos iniciamos la animación de desvanecimiento
+        timer = new System.Threading.Timer(_ =>
+        {
+            esOcultando = true;
+            InvokeAsync(StateHasChanged);
+
+            // 300ms después (lo que dura la animación), lo quitamos del DOM
+            Task.Delay(300).ContinueWith(_ =>
+            {
+                isVisible = false;
+                InvokeAsync(StateHasChanged);
+            });
+        }, null, 2700, Timeout.Infinite);
+    }
+
+    public void Dispose()
+    {
+        ToastService.OnShow -= MostrarMensaje;
+        timer?.Dispose();
+    }
+}

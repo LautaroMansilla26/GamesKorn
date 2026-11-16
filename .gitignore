@@ -1,0 +1,13 @@
+﻿# Visual Studio cache/options directories
+.vs/
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio user specific files
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# ASP.NET Core
+serviceworker-assets.js

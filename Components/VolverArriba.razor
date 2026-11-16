@@ -1,0 +1,36 @@
+﻿@inject IJSRuntime JS
+@implements IAsyncDisposable
+@* COMPONENTE REUTILIZABLE - VOLVER ARRIBA *@
+<button id="btnVolverArriba"
+        class="btn shadow rounded-circle d-flex align-items-center justify-content-center p-0"
+        @onclick="VolverArribaClick"
+        title="Volver arriba">
+    <i class="bi bi-arrow-up fs-5"></i>
+</button>
+
+@code {
+    private DotNetObjectReference<VolverArriba>? objRef;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            objRef = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("scrollHelpers.inicializarScrollTop", objRef);
+        }
+    }
+
+    private async Task VolverArribaClick()
+    {
+        await JS.InvokeVoidAsync("scrollHelpers.scrollToTop");
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        if (objRef != null)
+        {
+            objRef.Dispose();
+        }
+        await Task.CompletedTask;
+    }
+}

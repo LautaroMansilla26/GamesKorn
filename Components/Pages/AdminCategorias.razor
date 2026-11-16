@@ -1,0 +1,77 @@
+﻿@page "/admin/categorias"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@inject AppDbContext Context
+@inject ToastService ToastService
+@using GamesKorn.Components.Models
+@using GamesKorn.Data
+@using Microsoft.EntityFrameworkCore
+
+<h3 class="fw-bold text-white mb-4">Gestión de Categorías</h3>
+
+<div class="row">
+    <div class="col-md-4 mb-4">
+        <div class="card bg-dark border-secondary p-4">
+            <h5 class="text-white mb-3">Nueva Categoría</h5>
+            <EditForm Model="nuevaCategoria" OnValidSubmit="GuardarCategoria">
+                <DataAnnotationsValidator />
+                <div class="mb-3">
+                    <label class="form-label text-white">Nombre de Categoría</label>
+                    <InputText class="form-control bg-dark text-white border-secondary" @bind-Value="nuevaCategoria.Nombre" />
+                </div>
+                <button type="submit" class="btn btn-success w-100 fw-bold">Guardar Categoría</button>
+            </EditForm>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="table-responsive">
+            <table class="table table-dark table-striped align-middle border-secondary">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var cat in listaCategorias)
+                    {
+                        <tr>
+                            <td>@cat.Id</td>
+                            <td>@cat.Nombre</td>
+                            <td>
+                                @* <button class="btn btn-sm btn-outline-danger" @onclick="() => EliminarCategoria(cat)">Eliminar</button> *@
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+@code {
+    private CategoriaModelo nuevaCategoria = new();
+    private List<CategoriaModelo> listaCategorias = new();
+
+    protected override async Task OnInitializedAsync() => await CargarCategorias();
+
+    private async Task CargarCategorias() => listaCategorias = await Context.Categorias.ToListAsync();
+
+    private async Task GuardarCategoria()
+    {
+        Context.Categorias.Add(nuevaCategoria);
+        await Context.SaveChangesAsync();
+        ToastService.Mostrar("Categoría creada con éxito");
+        nuevaCategoria = new();
+        await CargarCategorias();
+    }
+
+    private async Task EliminarCategoria(CategoriaModelo cat)
+    {
+        Context.Categorias.Remove(cat);
+        await Context.SaveChangesAsync();
+        ToastService.Mostrar("Categoría eliminada");
+        await CargarCategorias();
+    }
+}

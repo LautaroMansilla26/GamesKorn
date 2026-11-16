@@ -1,0 +1,141 @@
+﻿@page "/register"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@using GamesKorn.Components.Models
+
+<PageTitle>GamesKorn - Registro</PageTitle>
+
+<div class="Formulario_Ingreso">
+    <h3 class="text-center fw-bold mb-3" style="color: #00FF66;">Registrarse</h3>
+
+    @if (enviado)
+    {
+        <div class="alert alert-success text-center bg-dark text-success border-success mb-3">
+            ¡Registro completado con éxito!
+        </div>
+    }
+
+    @* USUARIO *@
+    <div class="grupo-campo">
+        <label>Nombre de Usuario:</label>
+        <input type="text" class="input-form" @bind="nombre" @bind:event="oninput" placeholder="Tu GamerTag" />
+        <small class="text-muted d-block mt-1">
+            Caracteres: <strong style="color: #00FF66;">@nombre.Length</strong> / 20
+        </small>
+        @if (!string.IsNullOrEmpty(nombre) && !ValidadorGamer.EsNombreValido(nombre))
+        {
+            <span class="text-danger small">El nombre debe tener entre 3 y 20 caracteres.</span>
+        }
+    </div>
+
+    @* MAIL *@
+    <div class="grupo-campo">
+        <label>Correo Electrónico:</label>
+        <input type="email" class="input-form" @bind="mail" @bind:event="oninput" placeholder="correo@ejemplo.com" />
+        @if (!string.IsNullOrEmpty(mail) && !ValidadorGamer.EsEmailValido(mail))
+        {
+            <span class="text-danger small">Ingresa un correo válido (debe incluir "arroba" , '.' y 'com').</span>
+        }
+    </div>
+
+    @* CONTRASEÑA *@
+    <div class="grupo-campo">
+        <label>Contraseña:</label>
+        <input type="password" class="input-form" @bind="contra" @bind:event="oninput" placeholder="••••••••" />
+        @if (!string.IsNullOrEmpty(contra) && !ValidadorGamer.EsContrasenaValida(contra))
+        {
+            <span class="text-danger small">La contraseña debe tener al menos 6 caracteres.</span>
+        }
+    </div>
+
+    @* FECHA DE NACIMIENTO *@
+    <div class="grupo-campo">
+        <label>Fecha de Nacimiento:</label>
+        <input type="date"
+               class="input-form"
+               @bind="fechaSeleccionada"
+               @bind:event="onchange"
+               max="@DateTime.Today.ToString("yyyy-MM-dd")"
+               min="1924-01-01" />
+
+        <small class="text-muted d-block mt-1">
+            Edad calculada:
+            <strong style="color: @(ValidadorGamer.EsEdadValida(fechaSeleccionada) ? "#00FF66" : "#FF5555")">
+                @CalcularEdad(fechaSeleccionada) años
+            </strong>
+        </small>
+
+        @if (fechaSeleccionada > DateTime.Today)
+        {
+            <span class="text-danger small">La fecha no puede ser en el futuro.</span>
+        }
+        else if (!ValidadorGamer.EsEdadValida(fechaSeleccionada) && fechaSeleccionada != DateTime.MinValue)
+        {
+            <span class="text-danger small">Debes tener entre 13 y 100 años para registrarte.</span>
+        }
+    </div>
+
+    @* COLOR FAVORITO *@
+    <div class="grupo-campo">
+        <label>Color de Avatar / Setup:</label>
+        <div class="d-flex align-items-center gap-2">
+            <input type="color" class="form-control form-control-color bg-dark border-secondary" @bind="colorSeleccionado" title="Elige tu color" />
+            <span class="small" style="color: @colorSeleccionado;">Código: @colorSeleccionado</span>
+        </div>
+    </div>
+
+    @* BOTONES *@
+    <div class="d-flex gap-2 mt-4">
+        <button class="btn btn-primary w-100 fw-bold" @onclick="ProcesarFormulario" disabled="@(!FormularioValido)">
+            Registrarse
+        </button>
+        <button class="btn btn-outline-secondary w-50" @onclick="ReiniciarCampos">
+            Limpiar
+        </button>
+    </div>
+</div>
+
+@code {
+    private string nombre = "";
+    private string mail = "";
+    private string contra = "";
+    private string colorSeleccionado = "#00FF66";
+    private DateTime fechaSeleccionada = DateTime.Today.AddYears(-18);
+    private bool enviado = false;
+
+    // Validación general que consulta directamente a la clase ValidadorGamer
+    private bool FormularioValido =>
+        ValidadorGamer.EsNombreValido(nombre) &&
+        ValidadorGamer.EsEmailValido(mail) &&
+        ValidadorGamer.EsContrasenaValida(contra) &&
+        ValidadorGamer.EsEdadValida(fechaSeleccionada);
+
+    private int CalcularEdad(DateTime fechaNacimiento)
+    {
+        if (fechaNacimiento == DateTime.MinValue || fechaNacimiento > DateTime.Today) return 0;
+        int edad = DateTime.Today.Year - fechaNacimiento.Year;
+        if (fechaNacimiento.Date > DateTime.Today.AddYears(-edad))
+        {
+            edad--;
+        }
+        return edad;
+    }
+
+    private void ReiniciarCampos()
+    {
+        nombre = "";
+        mail = "";
+        contra = "";
+        colorSeleccionado = "#00FF66";
+        fechaSeleccionada = DateTime.Today.AddYears(-18);
+        enviado = false;
+    }
+
+    private void ProcesarFormulario()
+    {
+        if (FormularioValido)
+        {
+            enviado = true;
+            Console.WriteLine($"Usuario registrado: {nombre} ({mail})");
+        }
+    }
+}

@@ -1,0 +1,185 @@
+﻿@page "/"
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
+@inject FiltroService filtroService
+@inject AppDbContext Context
+@implements IDisposable
+@using GamesKorn.Components.Services
+@using Microsoft.EntityFrameworkCore
+
+<PageTitle>GamesKorn - Tu Tienda Gamer</PageTitle>
+
+<div class="py-3">
+    <!-- PANEL DE FILTROS EN HOME (Categorías y Subcategorías) -->
+    <div class="p-3 mb-4 rounded-3 shadow-lg" style="background: #1A1D24; border: 1px solid #2D3748;">
+        <div class="row g-2 align-items-center">
+
+            <div class="col-12 col-md-5">
+                <h5 class="fw-bold mb-0 text-white">Catálogo <span style="color: #00FF66;">Gamer</span></h5>
+                <small class="text-secondary">Filtrá por categorías y subcategorías</small>
+            </div>
+
+            <div class="col-12 col-md-7 d-flex gap-2 justify-content-md-end">
+                <select class="form-select form-select-sm bg-dark text-white border-secondary shadow-none"
+                        @value="categoriaSeleccionadaId"
+                        @onchange="OnCategoriaChanged">
+                    <option value="">Todas las Categorías</option>
+                    @foreach (var cat in listaCategorias)
+                    {
+                        <option value="@cat.Id">@cat.Nombre</option>
+                    }
+                </select>
+
+                <select class="form-select form-select-sm bg-dark text-white border-secondary shadow-none"
+                        @value="subCategoriaSeleccionadaId"
+                        @onchange="OnSubCategoriaChanged"
+                        disabled="@(!listaSubCategoriasFiltradas.Any())">
+                    <option value="">Todas las Subcategorías</option>
+                    @foreach (var sub in listaSubCategoriasFiltradas)
+                    {
+                        <option value="@sub.Id">@sub.Nombre</option>
+                    }
+                </select>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- LISTADO DE PRODUCTOS -->
+    @if (isLoading)
+    {
+        <div class="d-flex align-items-center gap-2 py-5 justify-content-center" style="color: #00FF66;">
+            <div class="spinner-border spinner-border-sm" role="status"></div>
+            <span>Cargando productos...</span>
+        </div>
+    }
+    else if (!productos.Any())
+    {
+        <div class="text-center py-5 rounded-3" style="background-color: #1A1D24; border: 1px dashed #2D3748;">
+            <i class="bi bi-controller fs-1 mb-2 d-block text-secondary"></i>
+            <h5 class="text-white">No encontramos productos</h5>
+            <p class="text-secondary small">Probá limpiando los filtros o buscando con otros términos.</p>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            @foreach (var prod in productos)
+            {
+                <div class="col">
+                    <ProductoCarta Producto="prod" />
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private bool isLoading = true;
+    private List<ProductoModelo> productos = new();
+    private List<CategoriaModelo> listaCategorias = new();
+    private List<SubCategoriaModelo> listaSubCategorias = new();
+    private List<SubCategoriaModelo> listaSubCategoriasFiltradas = new();
+
+    private int? categoriaSeleccionadaId;
+    private int? subCategoriaSeleccionadaId;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Nos suscribimos al evento del servicio pasando un método que recargue los productos
+        filtroService.OnChange += OnFiltroChanged;
+
+        try
+        {
+            listaCategorias = await Context.Categorias.ToListAsync();
+            listaSubCategorias = await Context.SubCategorias.ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error: {ex.Message}");
+        }
+
+        await CargarProductos();
+    }
+    private async void OnFiltroChanged()
+    {
+        // Cuando el filtro global cambia (ej. desde la barra superior), recargamos y refrescamos la UI
+        await InvokeAsync(async () =>
+        {
+            await CargarProductos();
+            StateHasChanged();
+        });
+    }
+    private async Task OnCategoriaChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out int catId))
+        {
+            categoriaSeleccionadaId = catId;
+            listaSubCategoriasFiltradas = listaSubCategorias.Where(s => s.CategoriaId == catId).ToList();
+        }
+        else
+        {
+            categoriaSeleccionadaId = null;
+            listaSubCategoriasFiltradas.Clear();
+        }
+
+        subCategoriaSeleccionadaId = null;
+        await CargarProductos();
+    }
+
+    private async Task OnSubCategoriaChanged(ChangeEventArgs e)
+    {
+        if (int.TryParse(e.Value?.ToString(), out int subId))
+        {
+            subCategoriaSeleccionadaId = subId;
+        }
+        else
+        {
+            subCategoriaSeleccionadaId = null;
+        }
+
+        await CargarProductos();
+    }
+    public void Dispose()
+    {
+        filtroService.OnChange -= OnFiltroChanged;
+    }
+    private async Task CargarProductos()
+    {
+        isLoading = true;
+        try
+        {
+            var query = Context.Productos
+                .Include(p => p.SubCategoria)
+                .ThenInclude(s => s!.Categoria)
+                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(filtroService.TerminoBusqueda))
+            {
+                string filtro = filtroService.TerminoBusqueda.ToLower().Trim();
+                query = query.Where(p => p.Nombre.ToLower().Contains(filtro) || p.Descripcion.ToLower().Contains(filtro));
+            }
+
+            if (categoriaSeleccionadaId.HasValue)
+            {
+                query = query.Where(p => p.SubCategoria != null && p.SubCategoria.CategoriaId == categoriaSeleccionadaId.Value);
+            }
+
+            if (subCategoriaSeleccionadaId.HasValue)
+            {
+                query = query.Where(p => p.SubCategoriaId == subCategoriaSeleccionadaId.Value);
+            }
+
+            productos = await query.ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error al cargar productos: {ex.Message}");
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+   
+}

@@ -1,0 +1,119 @@
+﻿@using GamesKorn.Components.Services
+@inherits LayoutComponentBase
+@inject FiltroService filtroService
+@inject NavigationManager Navigation
+
+<div class="page @(collapseSidebar ? "sidebar-collapsed" : "")">
+
+    <!-- CAPA OSCURA DE FONDO (BACKDROP) CUANDO EL MENÚ ESTÁ DESPLEGADO -->
+    @if (!collapseSidebar)
+    {
+        <div class="sidebar-backdrop" @onclick="CerrarSidebar"></div>
+    }
+
+    <!-- BARRA LATERAL (SIDEBAR) - PLEGADA POR DEFECTO -->
+    <div class="sidebar bg-dark border-end border-secondary">
+        <div class="d-flex align-items-center justify-content-between px-3 py-2 d-md-none border-bottom border-secondary">
+            <span class="text-white fw-bold" style="color: #00FF66 !important;">GamesKorn</span>
+            <button class="btn btn-dark text-white border-0 shadow-none" @onclick="ToggleSidebar">
+                <i class="bi bi-x-lg"></i>
+            </button>
+        </div>
+        <NavMenu />
+    </div>
+
+    <!-- CONTENEDOR PRINCIPAL -->
+    <main>
+        <!-- BARRA SUPERIOR CON HAMBURGUESA, BUSCADOR LARGO Y ACCESOS -->
+        <div class="top-row px-3 px-md-4 d-flex justify-content-between align-items-center bg-dark border-bottom border-secondary py-2 gap-3">
+
+            <div class="d-flex align-items-center gap-2">
+                <!-- BOTÓN HAMBURGUESA -->
+                <button class="btn btn-dark text-white border-secondary shadow-none py-1 px-2" @onclick="ToggleSidebar" title="Alternar menú">
+                    <i class="bi bi-list fs-5" style="color: #00FF66;"></i>
+                </button>
+
+                <!-- LOGO / TEXTO ENLAZADO A HOME -->
+                <a href="" class="text-decoration-none fw-bold d-none d-sm-inline" style="color: #00FF66 !important; font-size: 0.95rem;">
+                    GamesKorn
+                </a>
+            </div>
+
+            <!-- BUSCADOR MÁS LARGO Y DESPLAZADO A LA DERECHA -->
+            <div class="input-group input-group-sm mx-auto" style="max-width: 550px; width: 100%;">
+                <span class="input-group-text bg-dark border-secondary text-secondary">
+                    <i class="bi bi-search" style="color: #00FF66;"></i>
+                </span>
+                <input type="text"
+                       class="form-control bg-dark text-white border-secondary shadow-none form-control-sm"
+                       placeholder="Buscar producto (Presioná Enter)..."
+                       @bind-value="filtroService.TerminoBusqueda"
+                       @bind-value:event="oninput"
+                       @onkeyup="OnBusquedaKeyUp" />
+                @if (!string.IsNullOrWhiteSpace(filtroService.TerminoBusqueda))
+                {
+                    <button class="btn btn-dark border-secondary text-secondary" type="button" @onclick="LimpiarBusquedaLayout" title="Limpiar búsqueda">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                }
+            </div>
+
+            <!-- BOTONES DE AUTENTICACIÓN Y CARRITO -->
+            <div class="d-flex align-items-center gap-3">
+                <a href="carrito" class="text-white text-decoration-none d-flex align-items-center gap-1">
+                    <i class="bi bi-cart3 fs-5" style="color: #00FF66;"></i>
+                </a>
+                <a href="login" class="btn btn-sm btn-outline-light px-2 py-1 text-nowrap small">Iniciar sesión</a>
+                <a href="registro" class="btn btn-sm fw-bold px-2 py-1 text-nowrap small" style="background-color: #00FF66; color: #000;">Registrarse</a>
+            </div>
+        </div>
+
+        <!-- CONTENIDO DE LAS PÁGINAS (@Body) -->
+        <article class="content px-3 px-md-4 py-3" @onclick="CerrarSidebarSiEstaAbierto">
+            @Body
+        </article>
+    </main>
+
+    <ToastNotificacion />
+    <VolverArriba />
+</div>
+
+@code {
+    private bool collapseSidebar = true;
+
+    private void ToggleSidebar()
+    {
+        collapseSidebar = !collapseSidebar;
+    }
+
+    private void CerrarSidebar()
+    {
+        collapseSidebar = true;
+    }
+
+    private void CerrarSidebarSiEstaAbierto()
+    {
+        if (!collapseSidebar)
+        {
+            collapseSidebar = true;
+        }
+    }
+
+    private void OnBusquedaKeyUp(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+        {
+            filtroService.ActualizarTermino(filtroService.TerminoBusqueda);
+
+            if (!Navigation.Uri.EndsWith("/"))
+            {
+                Navigation.NavigateTo("/");
+            }
+        }
+    }
+
+    private void LimpiarBusquedaLayout()
+    {
+        filtroService.ActualizarTermino(string.Empty);
+    }
+}
