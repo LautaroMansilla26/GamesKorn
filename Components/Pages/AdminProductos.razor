@@ -6,61 +6,134 @@
 @using GamesKorn.Data
 @using Microsoft.EntityFrameworkCore
 
-<h3 class="fw-bold text-white mb-4">Gestión de Productos</h3>
+<PageTitle>GamesKorn - Gestión de Productos</PageTitle>
 
-<div class="row">
-    <div class="col-md-4 mb-4">
-        <div class="card bg-dark border-secondary p-4">
-            <h5 class="text-white mb-3">@(productoActual.Id == 0 ? "Nuevo Producto" : "Editar Producto")</h5>
-            <ProductoForm Producto="productoActual"
-                          Categorias="listaCategorias"
-                          SubCategoriasDisponibles="listaSubCategorias"
-                          OnGuardar="GuardarProductoDb" />
+<div class="container-fluid py-3 text-white">
+    <h3 class="fw-bold mb-4" style="color: #00FF66;">Gestión de Productos</h3>
+
+    <!-- VENTANA EMERGENTE (MODAL FLOTANTE DE VISTA PREVIA) -->
+    @if (mostrarResumenConfirmacion)
+    {
+        <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0, 0, 0, 0.85); z-index: 1050; backdrop-filter: blur(4px);">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content bg-dark border border-success text-white shadow-lg rounded-4 p-3" style="background-color: #1A1D24 !important;">
+
+                    <!-- Encabezado del Modal -->
+                    <div class="modal-header border-bottom border-secondary pb-3">
+                        <h5 class="modal-title fw-bold text-success d-flex align-items-center gap-2">
+                            <i class="bi bi-eye-fill"></i> Vista Previa del Producto
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white shadow-none" @onclick="CancelarGuardado"></button>
+                    </div>
+
+                    <!-- Cuerpo con TODOS los datos del producto -->
+                    <div class="modal-body py-4">
+                        <div class="d-flex align-items-center gap-3 mb-3 bg-black p-3 rounded border border-secondary">
+                            <img src="@productoActual.ImagenUrl" alt="@productoActual.Nombre" style="width: 75px; height: 75px; object-fit: cover; border-radius: 6px;" />
+                            <div>
+                                <h5 class="fw-bold text-white mb-1">@productoActual.Nombre</h5>
+                                <span class="text-success fw-bold fs-4">$@productoActual.Precio.ToString("N0")</span>
+                            </div>
+                        </div>
+
+                        <!-- Detalles adicionales completos -->
+                        <div class="bg-black p-3 rounded border border-secondary small text-muted">
+                            <div class="d-flex justify-content-between mb-2 border-bottom border-secondary pb-1">
+                                <span class="text-light">ID en Sistema:</span>
+                                <span>@(productoActual.Id == 0 ? "Nuevo (Automático)" : productoActual.Id.ToString())</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2 border-bottom border-secondary pb-1">
+                                <span class="text-light">Subcategoría ID:</span>
+                                <span>@productoActual.SubCategoriaId</span>
+                            </div>
+                            <div>
+                                <span class="text-light d-block mb-1">URL de Imagen:</span>
+                                <span class="text-truncate d-inline-block text-secondary" style="max-width: 100%;">@productoActual.ImagenUrl</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Botones de Acción -->
+                    <div class="modal-footer border-top border-secondary pt-3 d-flex gap-2">
+                        <button class="btn btn-outline-danger w-50 fw-bold py-2" @onclick="CancelarGuardado">
+                            <i class="bi bi-x-circle me-1"></i> Cancelar
+                        </button>
+                        <button class="btn btn-success w-50 fw-bold py-2" @onclick="ConfirmarGuardadoDb">
+                            <i class="bi bi-check-circle me-1"></i> Confirmar y Guardar
+                        </button>
+                    </div>
+
+                </div>
+            </div>
         </div>
-    </div>
+    }
 
-    <div class="col-md-8">
-        <div class="table-responsive">
-            <table class="table table-dark table-striped align-middle border-secondary">
-                <thead>
-                    <tr>
-                        <th>Imagen</th>
-                        <th>Nombre</th>
-                        <th>Categoría / Subcat</th>
-                        <th>Precio</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (listaProductos == null)
-                    {
-                        <tr><td colspan="5" class="text-center">Cargando productos...</td></tr>
-                    }
-                    else if (!listaProductos.Any())
-                    {
-                        <tr><td colspan="5" class="text-center">No hay productos registrados.</td></tr>
-                    }
-                    else
-                    {
-                        @foreach (var p in listaProductos)
-                        {
+    <div class="row">
+        <!-- Formulario de Creación / Edición -->
+        <div class="col-md-4 mb-4">
+            <div class="card bg-dark border-secondary p-4 shadow-sm" style="background-color: #1A1D24 !important;">
+                <h5 class="text-white mb-3 fw-bold border-bottom border-secondary pb-2">
+                    @(productoActual.Id == 0 ? "Nuevo Producto" : "Editar Producto")
+                </h5>
+                <ProductoForm Producto="productoActual"
+                              Categorias="listaCategorias"
+                              SubCategoriasDisponibles="listaSubCategorias"
+                              OnGuardar="MostrarResumen" />
+            </div>
+        </div>
+
+        <!-- Tabla de Listado de Productos -->
+        <div class="col-md-8">
+            <div class="card bg-dark border-secondary p-3 shadow-sm" style="background-color: #1A1D24 !important;">
+                <div class="table-responsive">
+                    <table class="table table-dark table-striped align-middle border-secondary mb-0">
+                        <thead>
                             <tr>
-                                <td><img src="@p.ImagenUrl" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" /></td>
-                                <td>@p.Nombre</td>
-                                <td>
-                                    <span class="badge bg-secondary">@(p.SubCategoria?.Categoria?.Nombre ?? "S/C")</span>
-                                    <br /><small class="text-success">@(p.SubCategoria?.Nombre ?? "Sin subcategoría")</small>
-                                </td>
-                                <td style="color: #00FF66;">$@p.Precio.ToString("N0")</td>
-                                <td>
-                                    <button class="btn btn-sm btn-outline-warning me-2" @onclick="() => CargarParaEditar(p)">Editar</button>
-                                    <button class="btn btn-sm btn-outline-danger" @onclick="() => EliminarProductoDb(p)">Eliminar</button>
-                                </td>
+                                <th>Imagen</th>
+                                <th>Nombre</th>
+                                <th>Categoría / Subcat</th>
+                                <th>Precio</th>
+                                <th class="text-center">Acciones</th>
                             </tr>
-                        }
-                    }
-                </tbody>
-            </table>
+                        </thead>
+                        <tbody>
+                            @if (listaProductos == null)
+                            {
+                                <tr><td colspan="5" class="text-center py-4 text-muted">Cargando productos...</td></tr>
+                            }
+                            else if (!listaProductos.Any())
+                            {
+                                <tr><td colspan="5" class="text-center py-4 text-muted">No hay productos registrados.</td></tr>
+                            }
+                            else
+                            {
+                                @foreach (var p in listaProductos)
+                                {
+                                    <tr>
+                                        <td>
+                                            <img src="@p.ImagenUrl" alt="@p.Nombre" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" />
+                                        </td>
+                                        <td class="fw-bold">@p.Nombre</td>
+                                        <td>
+                                            <span class="badge bg-secondary">@(p.SubCategoria?.Categoria?.Nombre ?? "S/C")</span>
+                                            <br /><small class="text-success">@(p.SubCategoria?.Nombre ?? "Sin subcategoría")</small>
+                                        </td>
+                                        <td class="fw-bold" style="color: #00FF66;">$@p.Precio.ToString("N0")</td>
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-outline-warning me-1" @onclick="() => CargarParaEditar(p)" title="Editar">
+                                                <i class="bi bi-pencil-square"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-danger" @onclick="() => EliminarProductoDb(p)" title="Eliminar">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -70,7 +143,9 @@
     private List<SubCategoriaModelo> listaSubCategorias = new();
     private ProductoModelo productoActual = new();
     private List<CategoriaModelo> listaCategorias = new();
-    
+
+    private bool mostrarResumenConfirmacion = false;
+
     protected override async Task OnInitializedAsync()
     {
         await CargarDatos();
@@ -87,7 +162,12 @@
         listaSubCategorias = await Context.SubCategorias.ToListAsync();
     }
 
-    private async Task GuardarProductoDb()
+    private void MostrarResumen()
+    {
+        mostrarResumenConfirmacion = true;
+    }
+
+    private async Task ConfirmarGuardadoDb()
     {
         if (productoActual.Id == 0)
         {
@@ -101,20 +181,29 @@
         }
 
         await Context.SaveChangesAsync();
+
         productoActual = new();
+        mostrarResumenConfirmacion = false;
         await CargarDatos();
+    }
+
+    private void CancelarGuardado()
+    {
+        mostrarResumenConfirmacion = false;
+        ToastService.Mostrar("Operación cancelada.");
     }
 
     private void CargarParaEditar(ProductoModelo prod)
     {
         productoActual = prod;
+        mostrarResumenConfirmacion = false;
     }
 
     private async Task EliminarProductoDb(ProductoModelo prod)
     {
         Context.Productos.Remove(prod);
         await Context.SaveChangesAsync();
-        ToastService.Mostrar($"Producto '{prod.Nombre}' eliminado");
+        ToastService.Mostrar($"Producto '{prod.Nombre}' eliminado correctamente");
         await CargarDatos();
     }
-}
+}   
