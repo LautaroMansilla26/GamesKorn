@@ -1,0 +1,584 @@
+﻿@page "/"
+@layout VacioLayout
+@using GamesKorn.Components.Layout
+@rendermode InteractiveServer
+
+<PageTitle>Feliz 4 Años ❤️</PageTitle>
+
+<div class="aniversario-wrapper min-vh-100 d-flex flex-column">
+    <!-- Franja superior rosa -->
+    <header class="barra-superior-rosa shadow-sm" aria-hidden="true"></header>
+
+    <!-- Líneas blancas curvadas estáticas (efecto viento/brisa suave) -->
+    <svg class="viento-fondo" viewBox="0 0 1440 900" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M -80 140 Q 260 60, 620 155 T 1520 120"
+              fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.58" />
+        <path d="M -100 185 Q 290 105, 650 195 T 1540 165"
+              fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" opacity="0.4" />
+
+        <path d="M -60 440 Q 340 530, 740 420 T 1520 460"
+              fill="none" stroke="#ffffff" stroke-width="2.2" stroke-linecap="round" opacity="0.55" />
+        <path d="M -90 485 Q 370 570, 770 465 T 1540 500"
+              fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" opacity="0.38" />
+
+        <path d="M -70 740 Q 310 650, 690 750 T 1520 710"
+              fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" opacity="0.56" />
+        <path d="M -80 780 Q 340 695, 720 790 T 1540 755"
+              fill="none" stroke="#ffffff" stroke-width="1.4" stroke-linecap="round" opacity="0.38" />
+    </svg>
+
+    <!-- Corazoncitos flotando en el fondo (12 corazones más grandes) -->
+    <div class="corazones-fondo" aria-hidden="true">
+        <span class="corazon c1">♥</span>
+        <span class="corazon c2">♡</span>
+        <span class="corazon c3">♥</span>
+        <span class="corazon c4">♡</span>
+        <span class="corazon c5">♥</span>
+        <span class="corazon c6">♡</span>
+        <span class="corazon c7">♥</span>
+        <span class="corazon c8">♡</span>
+        <span class="corazon c9">♥</span>
+        <span class="corazon c10">♡</span>
+        <span class="corazon c11">♥</span>
+        <span class="corazon c12">♡</span>
+    </div>
+
+    <!-- Contenido principal centrado -->
+    <main class="flex-grow-1 d-flex align-items-center justify-content-center p-3 p-md-4">
+        <div class="card aniversario-card shadow-lg border border-2 border-pink-suave text-center p-4 p-md-5" style="max-width: 700px; width: 100%;">
+
+            <!-- Fecha con estrellitas a los costados -->
+            <div class="mb-3 d-flex align-items-center justify-content-center gap-2">
+                <span class="estrella-deco">⭐</span>
+                <span class="badge rounded-pill px-3 py-2 badge-rosa shadow-sm">
+                    26 de noviembre • 4 años juntos
+                </span>
+                <span class="estrella-deco">⭐</span>
+            </div>
+
+            <!-- Título forzado en rosa fuerte -->
+            <h1 class="display-5 fw-bold titulo-rosa mb-3">
+                💕 ¡FELIZ 4 AÑOS! 💕
+            </h1>
+
+            <p class="lead texto-tierno mb-4">
+                Hoy se cumplen cuatro años siendo el hombre más feliz del mundo, junto a la mujer más linda, preciosa, leal y chikita 💕
+            </p>
+
+            <p class="lead texto-tierno mb-3">
+                <span class="estrella-deco">⭐</span> Sos mi: <span class="estrella-deco">⭐</span>
+            </p>
+
+            <!-- Galería / rincón de animalitos tiernos -->
+            <div class="row g-3 mb-4">
+                <div class="col-md-4">
+                    <div class="animal-box p-3 rounded-4 h-100 shadow-sm d-flex flex-column justify-content-between">
+                        <div class="fs-1 mb-2">🐹🍓</div>
+                        <div>
+                            <div class="fw-bold mb-1">Hamster chachetonsita</div>
+                            <div class="tiny-text">Tikita, tierna y loca</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="animal-box p-3 rounded-4 h-100 shadow-sm d-flex flex-column justify-content-between">
+                        <div class="mb-2 d-flex justify-content-center">
+                            <svg width="58" height="58" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                <circle cx="28" cy="30" r="10" fill="#f472b6" />
+                                <circle cx="72" cy="30" r="10" fill="#f472b6" />
+                                <rect x="20" y="26" width="60" height="52" rx="24" fill="#f9a8d4" stroke="#db2777" stroke-width="3" />
+                                <rect x="33" y="50" width="34" height="22" rx="11" fill="#fbcfe8" />
+                                <circle cx="36" cy="43" r="3.5" fill="#831843" />
+                                <circle cx="64" cy="43" r="3.5" fill="#831843" />
+                                <circle cx="45" cy="57" r="2.2" fill="#9d174d" />
+                                <circle cx="55" cy="57" r="2.2" fill="#9d174d" />
+                                <path d="M 46 63 Q 50 67 54 63" stroke="#9d174d" stroke-width="2.2" fill="none" stroke-linecap="round" />
+                                <circle cx="70" cy="24" r="6" fill="#ec4899" />
+                                <circle cx="70" cy="24" r="2.5" fill="#fef08a" />
+                            </svg>
+                        </div>
+                        <div>
+                            <div class="fw-bold mb-1">Capibara rosita</div>
+                            <div class="tiny-text">goldita y pacífica</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="animal-box p-3 rounded-4 h-100 shadow-sm d-flex flex-column justify-content-between">
+                        <div class="fs-1 mb-2">🐭🌸</div>
+                        <div>
+                            <div class="fw-bold mb-1">Shatita pechocha</div>
+                            <div class="tiny-text">adoradora de los riquitos y al quisu</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Medidor de ternura con Bootstrap progress -->
+            <div class="mb-4 text-start px-md-3">
+                <div class="d-flex justify-content-between small fw-semibold texto-tierno mb-1">
+                    <span>Barra del amolll</span>
+                    <span>@(PorcentajeTernura)%</span>
+                </div>
+                <div class="progress rounded-pill" style="height: 12px; background-color: #fce7f3;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated barra-ternura"
+                         role="progressbar"
+                         style="width: @(PorcentajeTernura)%;"
+                         aria-valuenow="@PorcentajeTernura"
+                         aria-valuemin="0"
+                         aria-valuemax="100">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botones con Bootstrap -->
+            <div class="d-flex flex-column flex-sm-row justify-content-center gap-2 mb-3">
+                <button class="btn btn-rosa px-4 py-2 rounded-pill fw-semibold" @onclick="EnviarAmor">
+                    Apretar para recibir bisitos y abachos virtuales ✨
+                </button>
+
+                <button class="btn btn-outline-rosa px-4 py-2 rounded-pill fw-semibold"
+                        type="button"
+                        @onclick="AlternarNotita">
+                    @(mostrarNotita ? "Cerrar notita 💌" : "Abrir notita 💌")
+                </button>
+            </div>
+
+            @if (contadorAbrazos > 0)
+            {
+                <div class="alert alert-rosa border-0 rounded-4 py-2 px-3 mb-3 fw-semibold">
+                    @MensajeActual (@contadorAbrazos @(contadorAbrazos == 1 ? "abrazo enviado" : "abrazos enviados"))
+                </div>
+            }
+
+            @if (mostrarNotita)
+            {
+                <div class="card card-body notita-box border-0 rounded-4 text-start mt-2 shadow-sm">
+                    <div class="fw-bold mb-2 notita-titulo">Con mucho amor, para mi pichonsita preciosa:</div>
+                    <p class="mb-2 notita-texto">
+                        💕 4 AÑOS MI AMORRRRRRRRR 💕
+                    </p>
+                    <p></p>
+                    <p class="mb-2 notita-texto">
+                        Pasa volando el tiempo estando al lado de una mujer tan bella, amorosa, inteligente y amable como usted, sos la mejor. Amo todo de usted y cada día me siento afortunado por habernos encontrado en esta vida
+                    </p>
+                    <p></p>
+                    <p class="mb-0 notita-texto">
+                        Espero poder seguir a su lado ⭐patoalavida⭐.
+                    </p>
+                    <p></p>
+                    <p class="mb-0 notita-texto">
+                        Muchas gracias por todas las risas, mimitos, apoyo, y sobre todo por todo el amor que me brindaste durante estos 4 años. Espero poder corresponderte y llenarte de amor por MUCHIIIIIIIIIIIIIIIIIIIIIIIIIIIIIISIMO tiempo másssss❤️
+                    </p>
+                    <p></p>
+                    <p class="mb-0 notita-texto">
+                        La amo mucho muchito muchón. No me alcanzan las palabras ni la vida para expresarle cuanto 7-7
+                    </p>
+                    <p></p>
+                    <p class="mb-0 notita-texto">
+                      No sabe cuan medicinal me resultan sus mimitos y sus caricias. Extraño siempre el roce de sus labios, sentir su aliento y apretujarla mientras nos besamos, estás más radiante y hermosa que nunca.
+                      Tu pelo, tu cuerpo, tu mente, todo está más maduro que nunca y me llena de orgullo por cada vez que va al trabajo, cada vez que va a ala iglesia aunque no quiera y seguramente tambien cuando vayas a la uni
+                      (ojito eh que ta hermosa y me la van a querer levantar >:[  )
+                    </p>
+                    <p></p>
+                    <p class="mb-0 notita-texto">
+                       Muero por verla y llenarla de besitos, abachos y caricias por siempreeeeee. LA AMO DEMASIADO MI SHATA PECHOCHA QUERIDITA BELLA HERMOSA DE MI a
+                        LA AMUUU"❤️💕❤️💕❤️💕❤️💕❤️💕❤️💕❤️"
+                    </p>
+                    <p></p>
+                    <p class="mb-0 notita-texto">
+                        No cambies nunca, con mucho amor, de su pichonsito que la ama demasiado ❤️
+                    </p>
+                    <p></p>
+                    <p class="mb-0 notita-texto">
+                        <a href="http://www.youtube.com/watch?v=eUSbfB805so"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="btn btn-outline-rosa px-4 py-2 rounded-pill fw-semibold">
+                             "Hablando de Love" 🎵
+                        </a>
+                    </p>
+                </div>
+            }
+        </div>
+        
+    </main>
+    <div class="d-flex justify-content-center align-items-center my-2" aria-hidden="true">
+        <div class="rata-bailarina-wrap">
+            <svg class="rata-svg" width="84" height="84" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                <!-- Colita curvada -->
+                <path d="M 88 82 Q 112 68, 104 46" fill="none" stroke="#f472b6" stroke-width="4" stroke-linecap="round" />
+
+                <!-- Patitas -->
+                <ellipse cx="44" cy="96" rx="10" ry="6" fill="#fbcfe8" stroke="#db2777" stroke-width="2.5" />
+                <ellipse cx="74" cy="96" rx="10" ry="6" fill="#fbcfe8" stroke="#db2777" stroke-width="2.5" />
+
+                <!-- Cuerpito -->
+                <ellipse cx="59" cy="76" rx="26" ry="22" fill="#f9a8d4" stroke="#db2777" stroke-width="3" />
+                <ellipse cx="59" cy="78" rx="15" ry="13" fill="#fdf2f8" />
+
+                <!-- Orejitas -->
+                <circle cx="38" cy="36" r="15" fill="#f9a8d4" stroke="#db2777" stroke-width="3" />
+                <circle cx="38" cy="36" r="8" fill="#fbcfe8" />
+                <circle cx="80" cy="36" r="15" fill="#f9a8d4" stroke="#db2777" stroke-width="3" />
+                <circle cx="80" cy="36" r="8" fill="#fbcfe8" />
+
+                <!-- Cabeza -->
+                <ellipse cx="59" cy="50" rx="24" ry="20" fill="#f9a8d4" stroke="#db2777" stroke-width="3" />
+
+                <!-- Ojitos y cachetes -->
+                <circle cx="49" cy="48" r="3.8" fill="#4a0d27" />
+                <circle cx="69" cy="48" r="3.8" fill="#4a0d27" />
+                <circle cx="47.8" cy="46.8" r="1.3" fill="#ffffff" />
+                <circle cx="67.8" cy="46.8" r="1.3" fill="#ffffff" />
+                <ellipse cx="42" cy="55" rx="5" ry="3" fill="#f472b6" opacity="0.7" />
+                <ellipse cx="76" cy="55" rx="5" ry="3" fill="#f472b6" opacity="0.7" />
+
+                <!-- Naricita rosada y sonrisita -->
+                <ellipse cx="59" cy="55" rx="4" ry="3" fill="#db2777" />
+                <path d="M 53 60 Q 59 65 65 60" fill="none" stroke="#831843" stroke-width="2.4" stroke-linecap="round" />
+
+                <!-- Bigotitos -->
+                <line x1="28" y1="53" x2="40" y2="55" stroke="#9d174d" stroke-width="2" stroke-linecap="round" />
+                <line x1="28" y1="59" x2="40" y2="58" stroke="#9d174d" stroke-width="2" stroke-linecap="round" />
+                <line x1="80" y1="55" x2="92" y2="53" stroke="#9d174d" stroke-width="2" stroke-linecap="round" />
+                <line x1="80" y1="58" x2="92" y2="59" stroke="#9d174d" stroke-width="2" stroke-linecap="round" />
+            </svg>
+        </div>
+    </div>
+</div>
+
+<style>
+    .aniversario-wrapper {
+        position: relative;
+        overflow-x: hidden;
+        background: linear-gradient(125deg, #ffe4ec, #ffd1e3, #fbcfe8, #fde2e4, #fce7f3);
+        background-size: 320% 320%;
+        animation: moverFondoRosa 12s ease infinite;
+    }
+
+        .aniversario-wrapper > header,
+        .aniversario-wrapper > main {
+            position: relative;
+            z-index: 3;
+        }
+
+    @@keyframes moverFondoRosa {
+        0% {
+            background-position: 0% 50%;
+        }
+
+        50% {
+            background-position: 100% 50%;
+        }
+
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    .viento-fondo {
+        position: fixed;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 1;
+    }
+
+    .corazones-fondo {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        overflow: hidden;
+        z-index: 2;
+    }
+
+    .corazon {
+        position: absolute;
+        bottom: -55px;
+        color: rgba(219, 39, 119, 0.36);
+        user-select: none;
+        animation: subirCorazon linear infinite;
+    }
+
+    .c1 {
+        left: 5%;
+        font-size: 1.9rem;
+        animation-duration: 9s;
+        animation-delay: 0s;
+    }
+
+    .c2 {
+        left: 13%;
+        font-size: 2.4rem;
+        animation-duration: 12s;
+        animation-delay: 2s;
+    }
+
+    .c3 {
+        left: 22%;
+        font-size: 1.7rem;
+        animation-duration: 10s;
+        animation-delay: 4s;
+    }
+
+    .c4 {
+        left: 31%;
+        font-size: 2.3rem;
+        animation-duration: 13s;
+        animation-delay: 1s;
+    }
+
+    .c5 {
+        left: 41%;
+        font-size: 1.8rem;
+        animation-duration: 11s;
+        animation-delay: 3s;
+    }
+
+    .c6 {
+        left: 51%;
+        font-size: 2.5rem;
+        animation-duration: 10s;
+        animation-delay: 5s;
+    }
+
+    .c7 {
+        left: 61%;
+        font-size: 2.0rem;
+        animation-duration: 12s;
+        animation-delay: 1.5s;
+    }
+
+    .c8 {
+        left: 70%;
+        font-size: 1.8rem;
+        animation-duration: 9.5s;
+        animation-delay: 3.5s;
+    }
+
+    .c9 {
+        left: 78%;
+        font-size: 2.3rem;
+        animation-duration: 11.5s;
+        animation-delay: 0.8s;
+    }
+
+    .c10 {
+        left: 85%;
+        font-size: 1.7rem;
+        animation-duration: 10.5s;
+        animation-delay: 2.8s;
+    }
+
+    .c11 {
+        left: 91%;
+        font-size: 2.2rem;
+        animation-duration: 12.5s;
+        animation-delay: 4.5s;
+    }
+
+    .c12 {
+        left: 96%;
+        font-size: 1.9rem;
+        animation-duration: 9.8s;
+        animation-delay: 1.2s;
+    }
+
+    @@keyframes subirCorazon {
+        0% {
+            transform: translateY(0) translateX(0) rotate(0deg);
+            opacity: 0;
+        }
+
+        15% {
+            opacity: 1;
+        }
+
+        50% {
+            transform: translateY(-50vh) translateX(14px) rotate(12deg);
+        }
+
+        85% {
+            opacity: 1;
+        }
+
+        100% {
+            transform: translateY(-110vh) translateX(-12px) rotate(-12deg);
+            opacity: 0;
+        }
+    }
+
+    .barra-superior-rosa {
+        width: 100%;
+        height: 48px;
+        background-color: #f472b6;
+    }
+
+    .aniversario-card {
+        background: rgba(255, 255, 255, 0.96) !important;
+        border-radius: 28px;
+    }
+
+    .border-pink-suave {
+        border-color: #fbcfe8 !important;
+    }
+
+    .estrella-deco {
+        font-size: 1.25rem;
+    }
+
+    .badge-rosa {
+        background-color: #fbcfe8 !important;
+        color: #9d174d !important;
+        font-size: 0.92rem;
+        font-weight: 600;
+    }
+
+    .titulo-rosa {
+        color: #db2777 !important;
+        letter-spacing: 0.5px;
+    }
+
+    .texto-tierno {
+        color: #6b2147 !important;
+        font-size: 1.05rem;
+    }
+
+    .animal-box {
+        background-color: #fff0f6;
+        border: 1.5px solid #f9a8d4;
+        color: #831843;
+        transition: transform 0.2s ease;
+    }
+
+        .animal-box:hover {
+            transform: translateY(-4px);
+        }
+
+    .tiny-text {
+        font-size: 0.8rem;
+        color: #9d174d;
+    }
+
+    .barra-ternura {
+        background-color: #ec4899 !important;
+    }
+
+    .btn-rosa {
+        background-color: #ec4899 !important;
+        color: #fff !important;
+        border: none;
+        transition: background-color 0.2s ease, transform 0.15s ease;
+    }
+
+        .btn-rosa:hover {
+            background-color: #db2777 !important;
+            transform: scale(1.02);
+        }
+
+    .btn-outline-rosa {
+        color: #db2777 !important;
+        border: 1.5px solid #f472b6 !important;
+        background-color: #fff5f9 !important;
+    }
+
+        .btn-outline-rosa:hover {
+            background-color: #fbcfe8 !important;
+            color: #831843 !important;
+        }
+
+    .alert-rosa {
+        background-color: #fdf2f8;
+        color: #be185d !important;
+    }
+
+    .notita-box {
+        background-color: #ffe4ef !important;
+        border: 1px solid #f472b6 !important;
+        color: #4a0d27 !important;
+    }
+
+    .notita-titulo {
+        color: #9d174d !important;
+        font-size: 1rem;
+    }
+
+    .notita-texto {
+        color: #4a0d27 !important;
+        font-size: 0.98rem;
+        font-weight: 500;
+        line-height: 1.5;
+    }
+    .rata-bailarina-wrap {
+        display: inline-block;
+        animation: baileRata 1.1s ease-in-out infinite;
+        transform-origin: bottom center;
+    }
+
+    @@keyframes baileRata {
+        0% {
+            transform: translateX(0) translateY(0) rotate(0deg);
+        }
+        25% {
+            transform: translateX(-8px) translateY(-5px) rotate(-8deg);
+        }
+        50% {
+            transform: translateX(0) translateY(-1px) rotate(0deg);
+        }
+        75% {
+            transform: translateX(8px) translateY(-5px) rotate(8deg);
+        }
+        100% {
+            transform: translateX(0) translateY(0) rotate(0deg);
+        }
+    }
+</style>
+
+@code {
+    private int contadorAbrazos = 0;
+    private bool mostrarNotita = false;
+
+    private int PorcentajeTernura => Math.Min(100, 40 + (contadorAbrazos * 15));
+
+    private readonly string[] frases =
+    [
+        "Un capibara aprueba estos 4 años con 10/10 💖",
+    "Su pichonsito le manda un abrazo gigante 🐹💕",
+    "Por ser una parejita de ratas por mucho tiempo más 🌸🐭",
+    "Por muchos años más juntos, hoy y siempre ❤️",
+    "La amo demasiado mi amorrr <3",
+    "Sos",
+    "La",
+    "Más",
+    "Preciosa",
+    "Del",
+    "mundoo",
+    "48 meses",
+    "209 semanas",
+    "1.461 días",
+    "35.064 horas",
+    "2.103.840",
+    "En los que jamás dejé de amarte",
+    "Ni por un instante❤️",
+    "❤️💕❤️💕❤️💕❤️💕❤️💕❤️💕❤️",
+    "TE AMOOOOOOOOOOOOOOOOO",
+
+
+    ];
+
+    private string MensajeActual => frases[(contadorAbrazos - 1) % frases.Length];
+
+    private void EnviarAmor()
+    {
+        contadorAbrazos++;
+    }
+
+    private void AlternarNotita()
+    {
+        mostrarNotita = !mostrarNotita;
+    }
+}
